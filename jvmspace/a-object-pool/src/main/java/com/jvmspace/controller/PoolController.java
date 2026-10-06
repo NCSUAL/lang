@@ -1,17 +1,32 @@
 package com.jvmspace.controller;
 
-import com.jvmspace.global.constants.OutputMessage;
-import com.jvmspace.view.ui.OutputView;
+import com.jvmspace.view.ui.MenuView;
+import com.jvmspace.view.ui.menu.MenuOption;
+
+import java.util.function.Supplier;
 
 public class PoolController {
-    private final OutputView outputView;
+    private final MenuView menuView;
 
-    public PoolController(OutputView outputView) {
-        this.outputView = outputView;
+    public PoolController(MenuView menuView) {
+        this.menuView = menuView;
     }
 
-    public void showMenu(){
-        outputView.printlnMessage(OutputMessage.MENU_PROMPT.getMessage());
-        outputView.printlnMessage(OutputMessage.MENU_OPTIONS.getMessage());
+    public MenuOption requestMenuOption() {
+        return retryUntilValidInput(() -> {
+            menuView.showMenu();
+            return menuView.readMenuOption();
+        });
+    }
+
+    private <T> T retryUntilValidInput(Supplier<T> action){
+        while (true) {
+            try{
+                return action.get();
+            }
+            catch (IllegalArgumentException e) {
+                menuView.showError(e.getMessage());
+            }
+        }
     }
 }
