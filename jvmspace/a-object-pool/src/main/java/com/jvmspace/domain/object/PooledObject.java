@@ -4,9 +4,13 @@ public class PooledObject {
     private final ObjectId id;
     private ObjectState state;
 
-    public PooledObject(ObjectId id) {
+    private PooledObject(ObjectId id) {
         this.id = id;
         this.state = ObjectState.IDLE;
+    }
+
+    public static PooledObject from(ObjectId id) {
+        return new PooledObject(id);
     }
 
     public void borrow() {
