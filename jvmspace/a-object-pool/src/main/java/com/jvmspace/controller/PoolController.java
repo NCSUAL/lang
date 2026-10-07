@@ -13,13 +13,13 @@ public class PoolController {
     }
 
     public MenuOption requestMenuOption() {
-        return retryUntilValidInput(() -> {
+        return retryUntilValid(() -> {
             menuView.showMenu();
             return menuView.readMenuOption();
         });
     }
 
-    private <T> T retryUntilValidInput(Supplier<T> action){
+    private <T> T retryUntilValid(Supplier<T> action){
         while (true) {
             try{
                 return action.get();
